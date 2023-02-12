@@ -5,30 +5,20 @@ from .models import News, Articles
 from .filters import NewsFilter, ArticlesFilters
 from .forms import NewsForm, ArticlesForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class NewsList(ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = News
     ordering = 'name'
-    # Указываем имя шаблона, в котором будут все инструкции о том,
-    # как именно пользователю должны быть показаны наши объекты
     template_name = 'news.html'
-    # Это имя списка, в котором будут лежать все объекты.
-    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'news'
     paginate_by = 10
 
     def get_queryset(self):
-        # Получаем обычный запрос
         queryset = super().get_queryset()
-        # Используем наш класс фильтрации.
-        # self.request.GET содержит объект QueryDict, который мы рассматривали
-        # в этом юните ранее.
-        # Сохраняем нашу фильтрацию в объекте класса,
-        # чтобы потом добавить в контекст и использовать в шаблоне.
         self.filterset = NewsFilter(self.request.GET, queryset)
-        # Возвращаем из функции отфильтрованный список товаров
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):

@@ -5,5 +5,8 @@
 <h2>Здравствуйте, {{request.user.username}}!</h2>
 <div>  </div>
 
-<button> <a href="{% url 'logout' %}">Выйти</a> </button>
+<button class="btn btn-danger">> <a href="{% url 'logout' %}">Выйти</a> </button>
+{% if is_not_premium %}
+    <button class="btn btn-warning"> <a href="{% url 'upgrade' %}"> Хочу Premium!</a> </button>
+{% endif %}
 {% endblock %}
