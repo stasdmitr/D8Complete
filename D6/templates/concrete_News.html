@@ -9,16 +9,17 @@ News
 {% block content %}
 
 <h1>{{ news.name }}</h1>
-   <hr>
-       <table>
-           <tr>
-               <td>Описание</td>
-               <td>Время</td>
-           </tr>
-           <tr>
-               <td>{{ news.description|censor }}</td>
-               <td>{{ news.date|date:'h:s d M Y' }}</td>
-           </tr>
-       </table>
-
+<hr>
+<table>
+    <tr>
+        <td>Описание</td>
+        <td>Время</td>
+    </tr>
+    <tr>
+        <td>{{ news.description|censor }}</td>
+        <td>{{ news.date|date:'h:s d M Y' }}</td>
+    </tr>
+</table>
+<a href="{% url 'news_delete' news.id %}" class="btn btn-danger">Удалить</a>
+<a href="{% url 'news_update' news.id %}" class="btn btn-info">Редактировать</a>
 {% endblock content %}

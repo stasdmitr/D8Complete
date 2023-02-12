@@ -20,5 +20,6 @@ News
                <td>{{ articles.date|date:'h:s d M Y' }}</td>
            </tr>
        </table>
-
+<a href="{% url 'articles_delete' articles.pk %}"class="btn btn-danger">Удалить</a>
+    <a href="{% url 'articles_update' articles.pk %}"class="btn btn-info">Редактировать</a>
 {% endblock content %}
