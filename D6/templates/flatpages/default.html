@@ -26,13 +26,16 @@
        <div class="collapse navbar-collapse" id="navbarResponsive">
            <ul class="navbar-nav ml-auto">
                <li class="nav-item active">
-                   <a class="nav-link" href="/articles/">Статьи<a>
+                   <a class="nav-link" href="{% url 'home' %}">Домой<a>
+               </li>
+               <li class="nav-item active">
+                   <a class="nav-link" href="{% url 'article_list' %}">Статьи<a>
                </li>
                <li class="nav-item">
-                   <a class="nav-link" href="/news/">Новости</a>
+                   <a class="nav-link" href="{% url 'news_list' %}">Новости</a>
                </li>
                <li class="nav-item">
-                   <a class="nav-link" href="/news/search/">Поиск</a>
+                   <a class="nav-link" href="{% url 'news_search' %}">Поиск</a>
                </li>
            </ul>
        </div>

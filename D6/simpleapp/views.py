@@ -7,7 +7,6 @@ from .forms import NewsForm, ArticlesForm
 from django.urls import reverse_lazy
 
 
-
 class NewsList(ListView):
     # Указываем модель, объекты которой мы будем выводить
     model = News
@@ -37,6 +36,7 @@ class NewsList(ListView):
         # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
+
 
 class NewsDetail(DetailView):
     # Модель всё та же, но мы хотим получать информацию по отдельному товару
@@ -98,6 +98,7 @@ class NewsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 # ______________________________________________________________________________________
 
 
@@ -131,6 +132,7 @@ class ArticlesList(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 class ArticlesDetail(DetailView):
     # Модель всё та же, но мы хотим получать информацию по отдельному товару
     model = Articles
@@ -162,16 +164,6 @@ class ArticlesDelete(DeleteView):
     success_url = reverse_lazy('articles_list')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+class Index(ListView):
+    template_name = 'index.html'
+    model = News
