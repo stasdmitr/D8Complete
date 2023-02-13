@@ -14,8 +14,7 @@ def redirect_view(request):
     return response
 
 
-class NewsList(ListView):
-    # Указываем модель, объекты которой мы будем выводить
+class NewsList(ListView):  # Список новостей
     model = News
     ordering = 'name'
     template_name = 'news.html'
@@ -33,14 +32,14 @@ class NewsList(ListView):
         return context
 
 
-class NewsDetail(DetailView):
+class NewsDetail(DetailView):  # Каждая новость отдельно
     model = News
     template_name = 'concrete_News.html'
     context_object_name = 'news'
 
 
-# Добавляем новое представление для создания товаров.
-class NewsCreate(PermissionRequiredMixin, CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):  # Создание новости
+    permission_denied_message = "Доступ закрыт"
     permission_required = ("simpleapp.add_news")
     form_class = NewsForm
     model = News
@@ -57,22 +56,24 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         return redirect('news:news')
 
 
-class NewsUpdate(PermissionRequiredMixin, UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):  # Редактирование новости
     form_class = NewsForm
     model = News
     template_name = 'news_edit.html'
     success_url = reverse_lazy('news_list')
+    permission_denied_message = "Доступ закрыт"
     permission_required = ('simpleapp.change_news')
 
 
-class NewsDelete(PermissionRequiredMixin, DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):  # Удаление новости
     model = News
     template_name = 'news_delete.html'
     success_url = reverse_lazy('news_list')
+    permission_denied_message = "Доступ закрыт"
     permission_required = ('simpleapp.delete_news')
 
 
-class NewsSearch(ListView):
+class NewsSearch(ListView):  # Поиск новости
     model = News
     template_name = 'news_search.html'
     ordering = 'name'
@@ -92,7 +93,7 @@ class NewsSearch(ListView):
 # ______________________________________________________________________________________
 
 
-class ArticlesList(ListView):
+class ArticlesList(ListView):  # Список статей
     model = Articles
     ordering = 'name'
     template_name = 'articles.html'
@@ -110,13 +111,14 @@ class ArticlesList(ListView):
         return context
 
 
-class ArticlesDetail(DetailView):
+class ArticlesDetail(DetailView):  # Отдельная статья
     model = Articles
     template_name = 'concrete_Articles.html'
     context_object_name = 'articles'
 
 
-class ArticlesCreate(PermissionRequiredMixin, CreateView):
+class ArticlesCreate(PermissionRequiredMixin, CreateView):  # Создание статьи
+    permission_denied_message = "Доступ закрыт"
     permission_required = ("simpleapp.add_articles")
     form_class = ArticlesForm
     model = Articles
@@ -133,7 +135,7 @@ class ArticlesCreate(PermissionRequiredMixin, CreateView):
         return redirect('articles:articles')
 
 
-class ArticlesUpdate(PermissionRequiredMixin, UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin, UpdateView):  # Редактирование статьи
     form_class = ArticlesForm
     model = Articles
     template_name = 'articles_edit.html'
@@ -142,13 +144,14 @@ class ArticlesUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = ('simpleapp.change_articles')
 
 
-class ArticlesDelete(PermissionRequiredMixin, DeleteView):
+class ArticlesDelete(PermissionRequiredMixin, DeleteView):  # Удаление статьи
     model = Articles
     template_name = 'articles_delete.html'
     success_url = reverse_lazy('articles_list')
+    permission_denied_message = "Доступ закрыт"
     permission_required = 'simpleapp.delete_articles'
 
 
-class Index(ListView):
+class Index(ListView):  # Страничка после регистрации/Авторизации
     template_name = 'index.html'
     model = News
