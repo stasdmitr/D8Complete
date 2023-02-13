@@ -6,6 +6,12 @@ from .filters import NewsFilter, ArticlesFilters
 from .forms import *
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import redirect
+
+
+def redirect_view(request):
+    response = redirect('/redirect-success/')
+    return response
 
 
 class NewsList(ListView):
@@ -23,17 +29,13 @@ class NewsList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
 
 
 class NewsDetail(DetailView):
-    # Модель всё та же, но мы хотим получать информацию по отдельному товару
     model = News
-    # Используем другой шаблон — product.html
     template_name = 'concrete_News.html'
-    # Название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'news'
 
 
@@ -55,16 +57,19 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         return redirect('news:news')
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
     form_class = NewsForm
     model = News
     template_name = 'news_edit.html'
+    success_url = reverse_lazy('news_list')
+    permission_required = ('simpleapp.change_news')
 
 
-class NewsDelete(DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
     model = News
     template_name = 'news_delete.html'
     success_url = reverse_lazy('news_list')
+    permission_required = ('simpleapp.delete_news')
 
 
 class NewsSearch(ListView):
@@ -106,20 +111,17 @@ class ArticlesList(ListView):
 
 
 class ArticlesDetail(DetailView):
-    # Модель всё та же, но мы хотим получать информацию по отдельному товару
     model = Articles
-    # Используем другой шаблон — product.html
     template_name = 'concrete_Articles.html'
-    # Название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'articles'
 
 
-# Добавляем новое представление для создания товаров.
 class ArticlesCreate(PermissionRequiredMixin, CreateView):
     permission_required = ("simpleapp.add_articles")
     form_class = ArticlesForm
     model = Articles
     template_name = 'articles_edit.html'
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         user = request.user
@@ -131,16 +133,20 @@ class ArticlesCreate(PermissionRequiredMixin, CreateView):
         return redirect('articles:articles')
 
 
-class ArticlesUpdate(UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin, UpdateView):
     form_class = ArticlesForm
     model = Articles
     template_name = 'articles_edit.html'
+    success_url = reverse_lazy('articles_list')
+    permission_denied_message = "Доступ закрыт"
+    permission_required = ('simpleapp.change_articles')
 
 
-class ArticlesDelete(DeleteView):
+class ArticlesDelete(PermissionRequiredMixin, DeleteView):
     model = Articles
     template_name = 'articles_delete.html'
     success_url = reverse_lazy('articles_list')
+    permission_required = 'simpleapp.delete_articles'
 
 
 class Index(ListView):
