@@ -9,6 +9,7 @@ class BaseRegisterForm(UserCreationForm):
     email = forms.EmailField(label="Email")
     first_name = forms.CharField(label="Имя")
     last_name = forms.CharField(label="Фамилия")
+    base_group = Group.objects.get(name='basic')
 
     class Meta:
         model = User

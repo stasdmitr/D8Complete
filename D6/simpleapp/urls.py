@@ -3,8 +3,8 @@ from .views import *
 from protect.views import IndexView
 
 urlpatterns = [
-    path('', Index.as_view(), name="home"),
-    path('news/', NewsList.as_view(), name="news_list"),
+    #path('', Index.as_view(), name="home"),
+    path('', NewsList.as_view(), name="news_list"),
     path('articles/', ArticlesList.as_view(), name="articles_list"),
     path('news/<int:pk>', NewsDetail.as_view(), name='news_detail'),
     path('news/create/', NewsCreate.as_view(), name='news_create'),
