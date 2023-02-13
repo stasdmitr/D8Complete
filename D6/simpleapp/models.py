@@ -1,12 +1,17 @@
 from datetime import datetime
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+
+
+class Author(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
 
 class News(models.Model):
-    date = models.DateTimeField(default=datetime.now)
-    name = models.CharField(max_length=50, unique=True)
-    description = models.TextField(default="News post")
+    date = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')
+    name = models.CharField(max_length=50, unique=True, verbose_name='Заголовок')
+    description = models.TextField(default="Ваша новость", verbose_name='Содержание')
 
     def get_absolute_url(self):
         return reverse('news_detail', args=[str(self.id)])
@@ -16,9 +21,9 @@ class News(models.Model):
 
 
 class Articles(models.Model):
-    date = models.DateTimeField(default=datetime.now)
-    name = models.CharField(max_length=50, unique=True)
-    description = models.TextField(default="Articles_post")
+    date = models.DateTimeField(default=datetime.now, verbose_name='Дата создания')
+    name = models.CharField(max_length=50, unique=True, verbose_name='Заголовок')
+    description = models.TextField(default="Ваша статья", verbose_name='Содержание')
 
     def get_absolute_url(self):
         return reverse('articles_detail', args=[str(self.id)])

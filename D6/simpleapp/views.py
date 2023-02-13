@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from datetime import datetime
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import News, Articles
+from .models import *
 from .filters import NewsFilter, ArticlesFilters
-from .forms import NewsForm, ArticlesForm
+from .forms import *
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
@@ -38,13 +38,21 @@ class NewsDetail(DetailView):
 
 
 # Добавляем новое представление для создания товаров.
-class NewsCreate(CreateView):
-    # Указываем нашу разработанную форму
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ("simpleapp.add_news")
     form_class = NewsForm
-    # модель товаров
     model = News
-    # и новый шаблон, в котором используется форма.
     template_name = 'news_edit.html'
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        user = request.user
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = Author.objects.get_or_create(user=user)[0]
+            post.save()
+            return self.form_valid(form)
+        return redirect('news:news')
 
 
 class NewsUpdate(UpdateView):
@@ -62,29 +70,16 @@ class NewsDelete(DeleteView):
 class NewsSearch(ListView):
     model = News
     template_name = 'news_search.html'
-    # Указываем модель, объекты которой мы будем выводить
     ordering = 'name'
-    # Указываем имя шаблона, в котором будут все инструкции о том,
-    # как именно пользователю должны быть показаны наши объекты
-    # Это имя списка, в котором будут лежать все объекты.
-    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'news'
 
     def get_queryset(self):
-        # Получаем обычный запрос
         queryset = super().get_queryset()
-        # Используем наш класс фильтрации.
-        # self.request.GET содержит объект QueryDict, который мы рассматривали
-        # в этом юните ранее.
-        # Сохраняем нашу фильтрацию в объекте класса,
-        # чтобы потом добавить в контекст и использовать в шаблоне.
         self.filterset = NewsFilter(self.request.GET, queryset)
-        # Возвращаем из функции отфильтрованный список товаров
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
 
@@ -93,32 +88,19 @@ class NewsSearch(ListView):
 
 
 class ArticlesList(ListView):
-    # Указываем модель, объекты которой мы будем выводить
     model = Articles
     ordering = 'name'
-    # Указываем имя шаблона, в котором будут все инструкции о том,
-    # как именно пользователю должны быть показаны наши объекты
     template_name = 'articles.html'
-    # Это имя списка, в котором будут лежать все объекты.
-    # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'articles'
     paginate_by = 10
 
     def get_queryset(self):
-        # Получаем обычный запрос
         queryset = super().get_queryset()
-        # Используем наш класс фильтрации.
-        # self.request.GET содержит объект QueryDict, который мы рассматривали
-        # в этом юните ранее.
-        # Сохраняем нашу фильтрацию в объекте класса,
-        # чтобы потом добавить в контекст и использовать в шаблоне.
         self.filterset = ArticlesFilters(self.request.GET, queryset)
-        # Возвращаем из функции отфильтрованный список товаров
         return self.filterset.qs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
 
@@ -133,13 +115,20 @@ class ArticlesDetail(DetailView):
 
 
 # Добавляем новое представление для создания товаров.
-class ArticlesCreate(CreateView):
-    # Указываем нашу разработанную форму
+class ArticlesCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ("simpleapp.add_articles")
     form_class = ArticlesForm
-    # модель товаров
     model = Articles
-    # и новый шаблон, в котором используется форма.
     template_name = 'articles_edit.html'
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        user = request.user
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = Author.objects.get_or_create(user=user)[0]
+            post.save()
+            return self.form_valid(form)
+        return redirect('articles:articles')
 
 
 class ArticlesUpdate(UpdateView):

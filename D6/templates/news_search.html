@@ -1,7 +1,6 @@
 {% extends 'flatpages/default.html' %}
 
 {% load custom_filters %}
-
 {% load custom_tags %}
 
 {% block title %}
@@ -10,12 +9,8 @@ News
 
 {% block content %}
    <h1>Поиск новостей</h1>
-
-   {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
    <form action="" method="get">
-       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
        {{ filterset.form.as_p }}
-       {# Добавим кнопку отправки данных формы #}
        <input type="submit" value="Найти" />
    </form>
 
