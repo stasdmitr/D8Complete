@@ -9,7 +9,7 @@ class BaseRegisterForm(UserCreationForm):
     email = forms.EmailField(label="Email")
     first_name = forms.CharField(label="Имя")
     last_name = forms.CharField(label="Фамилия")
-    base_group = Group.objects.get(name='basic')
+    base_group = Group.objects.get(name='common')
 
     class Meta:
         model = User
@@ -25,6 +25,6 @@ class BasicSignupForm(SignupForm):
 
     def save(self, request):
         user = super(BasicSignupForm, self).save(request)
-        basic_group = Group.objects.get(name='basic')
+        basic_group = Group.objects.get(name='common')
         basic_group.user_set.add(user)
         return user
